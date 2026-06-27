@@ -88,7 +88,11 @@ describe('SeasonsService', () => {
       mockPrisma.season.findUnique
         .mockResolvedValueOnce(mockSeason)   // проверка существования
         .mockResolvedValueOnce(activated)    // финальный return
-      mockPrisma.$transaction.mockImplementation((fn: any) => fn(mockPrisma))
+      mockPrisma.$transaction.mockImplementation((fn: any) => fn({
+        ...mockPrisma,
+        ship: { deleteMany: jest.fn() },
+        prize: { deleteMany: jest.fn() },
+      }))
       mockPrisma.season.updateMany.mockResolvedValue({ count: 1 })
       mockPrisma.season.update.mockResolvedValue(activated)
 
@@ -106,7 +110,7 @@ describe('SeasonsService', () => {
     })
 
     it('выбрасывает NotFoundException если сезон не найден', async () => {
-      mockPrisma.season.findUnique.mockResolvedValue(null)
+      mockPrisma.season.findUnique.mockResolvedValueOnce(null)
       await expect(service.activate('ghost-id')).rejects.toThrow(NotFoundException)
     })
 

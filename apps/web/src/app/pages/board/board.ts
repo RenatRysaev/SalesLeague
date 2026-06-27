@@ -43,6 +43,12 @@ type CellState = 'empty' | 'miss' | 'hit' | 'sunk'
     </mat-toolbar>
 
     <div class="page">
+      @if (noActiveSeason()) {
+        <div class="no-season">
+          <mat-icon>anchor</mat-icon>
+          <p>Нет активного сезона. Попросите администратора запустить игру.</p>
+        </div>
+      } @else {
       <div class="board-header">
         <h2>Привет, {{ auth.user()?.name }}</h2>
         @if (balance() === 0) {
@@ -73,6 +79,7 @@ type CellState = 'empty' | 'miss' | 'hit' | 'sunk'
           </div>
         }
       </div>
+      } <!-- end @else -->
     </div>
   `,
   styles: [`
@@ -85,6 +92,12 @@ type CellState = 'empty' | 'miss' | 'hit' | 'sunk'
     }
 
     .page { padding: 32px; display: flex; flex-direction: column; align-items: center; }
+    .no-season {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      margin-top: 80px; color: var(--mat-sys-on-surface-variant);
+    }
+    .no-season mat-icon { font-size: 48px; width: 48px; height: 48px; }
+    .no-season p { font-size: 16px; }
     .board-header { text-align: center; margin-bottom: 28px; }
     .board-header h2 { font-size: 20px; font-weight: 500; }
     .hint { color: var(--mat-sys-on-surface-variant); font-size: 14px; margin-top: 8px; }
@@ -130,6 +143,7 @@ export class BoardPage implements OnInit {
   cols = Array.from({ length: 10 }, (_, i) => i)
 
   balance = signal(0)
+  noActiveSeason = signal(false)
   private shotMap = signal<Map<string, ShotResult>>(new Map())
   private sunkShipCells = signal<Set<string>>(new Set())
   private seasonId = signal<string | null>(null)
@@ -172,8 +186,8 @@ export class BoardPage implements OnInit {
       next: (result) => {
         const key = `${row}-${col}`
         this.shotMap.update((m) => new Map(m).set(key, result))
-        this.balance.update((b) => b - 1)
         this.firing.set(false)
+        this.loadBalance(this.seasonId()!)
 
         if (result.isSunk) {
           this.snack.open(`🏆 Корабль потоплен! Приз: ${result.prize?.name}`, 'OK', { duration: 5000 })
@@ -195,6 +209,7 @@ export class BoardPage implements OnInit {
         this.loadHistory(season.id)
         this.loadBalance(season.id)
       },
+      error: () => this.noActiveSeason.set(true),
     })
   }
 

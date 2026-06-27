@@ -42,6 +42,12 @@ interface SeasonStats {
     </mat-toolbar>
 
     <div class="page">
+      @if (noActiveSeason()) {
+        <div class="no-season">
+          <mat-icon>anchor</mat-icon>
+          <p>Нет активного сезона.</p>
+        </div>
+      }
       @if (stats()) {
         <div class="stats-row">
           <mat-card class="stat-card">
@@ -125,6 +131,12 @@ interface SeasonStats {
     .my-row { background: rgba(var(--mat-sys-primary-rgb, 33,150,243), 0.08); }
     .me-chip { font-size: 11px; height: 20px; margin-left: 8px; }
 
+    .no-season {
+      display: flex; flex-direction: column; align-items: center; gap: 12px;
+      margin-top: 80px; color: var(--mat-sys-on-surface-variant);
+    }
+    .no-season mat-icon { font-size: 48px; width: 48px; height: 48px; }
+    .no-season p { font-size: 16px; }
     .green { color: #4ade80; }
     .red { color: #f87171; }
     .yellow { color: #fbbf24; }
@@ -137,11 +149,15 @@ export class LeaderboardPage implements OnInit {
   columns = ['rank', 'name', 'hits', 'shotsFired', 'balance']
   entries = signal<LeaderboardEntry[]>([])
   stats = signal<SeasonStats | null>(null)
+  noActiveSeason = signal(false)
 
   ngOnInit() {
-    this.http.get<{ id: string }>('/api/seasons/active').subscribe((season) => {
-      this.http.get<LeaderboardEntry[]>(`/api/seasons/${season.id}/leaderboard`).subscribe((d) => this.entries.set(d))
-      this.http.get<SeasonStats>(`/api/seasons/${season.id}/stats`).subscribe((d) => this.stats.set(d))
+    this.http.get<{ id: string }>('/api/seasons/active').subscribe({
+      next: (season) => {
+        this.http.get<LeaderboardEntry[]>(`/api/seasons/${season.id}/leaderboard`).subscribe((d) => this.entries.set(d))
+        this.http.get<SeasonStats>(`/api/seasons/${season.id}/stats`).subscribe((d) => this.stats.set(d))
+      },
+      error: () => this.noActiveSeason.set(true),
     })
   }
 }

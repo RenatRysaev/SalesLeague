@@ -34,6 +34,9 @@ export class SeasonsService {
     await this.prisma.$transaction(async (tx) => {
       await tx.season.updateMany({ where: { isActive: true }, data: { isActive: false } })
       await tx.season.update({ where: { id }, data: { isActive: true } })
+      // Удаляем старые корабли и призы чтобы не было дублей при повторной активации
+      await tx.ship.deleteMany({ where: { seasonId: id } })
+      await tx.prize.deleteMany({ where: { seasonId: id } })
     })
 
     await this.shipGenerator.placeShipsForSeason(id)
