@@ -28,7 +28,7 @@ interface User { id: string; name: string; email: string; role: string }
   ],
   template: `
     <mat-toolbar color="primary">
-      <span>🚢 Морской бой — Админ</span>
+      <span>⚡ SalesLeague — Админ</span>
       <span class="spacer"></span>
       <a mat-button routerLink="/board">Поле</a>
       <a mat-button routerLink="/leaderboard">Рейтинг</a>

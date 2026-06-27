@@ -30,7 +30,7 @@ interface SeasonStats {
   imports: [RouterLink, MatToolbarModule, MatButtonModule, MatIconModule, MatTableModule, MatCardModule, MatChipsModule],
   template: `
     <mat-toolbar color="primary">
-      <span>🚢 Морской бой</span>
+      <span>⚡ SalesLeague</span>
       <span class="spacer"></span>
       <a mat-button routerLink="/board">Поле</a>
       @if (auth.isAdmin()) {

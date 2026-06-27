@@ -27,7 +27,7 @@ type CellState = 'empty' | 'miss' | 'hit' | 'sunk'
   imports: [RouterLink, MatToolbarModule, MatButtonModule, MatChipsModule, MatSnackBarModule, MatTooltipModule, MatIconModule, MatBadgeModule],
   template: `
     <mat-toolbar color="primary">
-      <span>🚢 Морской бой</span>
+      <span>⚡ SalesLeague</span>
       <span class="spacer"></span>
       <a mat-button routerLink="/leaderboard">Рейтинг</a>
       @if (auth.isAdmin()) {

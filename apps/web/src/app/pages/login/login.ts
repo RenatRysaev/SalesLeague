@@ -15,7 +15,7 @@ import { AuthService } from '../../core/auth.service'
     <div class="login-wrap">
       <mat-card class="login-card">
         <mat-card-header>
-          <mat-card-title>🚢 Морской бой</mat-card-title>
+          <mat-card-title>⚡ SalesLeague</mat-card-title>
           <mat-card-subtitle>Мотивация через игру</mat-card-subtitle>
         </mat-card-header>
 

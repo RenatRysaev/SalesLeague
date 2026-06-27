@@ -31,7 +31,9 @@
       "Bash(/Users/renatrysaev/.nvm/versions/node/v22.23.1/bin/node /Users/renatrysaev/Documents/pr/sale-motivation/apps/web/node_modules/@angular/cli/bin/ng.js serve --port 4200 --open)",
       "Bash(echo \"Web PID: $!\")",
       "Bash(node -e ' *)",
-      "Bash(node -e \"process.stdin.resume\\(\\);let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>console.log\\(d\\)\\)\")"
+      "Bash(node -e \"process.stdin.resume\\(\\);let d='';process.stdin.on\\('data',c=>d+=c\\);process.stdin.on\\('end',\\(\\)=>console.log\\(d\\)\\)\")",
+      "Bash(sed -i '' 's/🚢 Морской бой/⚡ SalesLeague/g' /Users/renatrysaev/Documents/pr/sale-motivation/apps/web/src/app/pages/admin/admin.ts /Users/renatrysaev/Documents/pr/sale-motivation/apps/web/src/app/pages/leaderboard/leaderboard.ts /Users/renatrysaev/Documents/pr/sale-motivation/apps/web/src/app/pages/board/board.ts)",
+      "Bash(sed -i '' 's/🚢 Морской бой/⚡ SalesLeague/g' /Users/renatrysaev/Documents/pr/sale-motivation/apps/web/src/app/pages/login/login.ts)"
     ]
   }
 }
