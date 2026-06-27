@@ -1,0 +1,23 @@
+services:
+  api:
+    build:
+      context: ./apps/api
+    environment:
+      DATABASE_URL: file:/data/db.sqlite
+      JWT_SECRET: ${JWT_SECRET:-change_me_in_production}
+      JWT_REFRESH_SECRET: ${JWT_REFRESH_SECRET:-change_me_refresh_in_production}
+    volumes:
+      - db_data:/data
+    restart: unless-stopped
+
+  web:
+    build:
+      context: ./apps/web
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  db_data:
