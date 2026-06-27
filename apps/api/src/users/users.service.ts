@@ -31,4 +31,11 @@ export class UsersService {
   async getUserByEmail(email: string) {
     return this.prisma.user.findUnique({ where: { email } })
   }
+
+  findAll() {
+    return this.prisma.user.findMany({
+      select: { id: true, name: true, email: true, role: true },
+      orderBy: { name: 'asc' },
+    })
+  }
 }
