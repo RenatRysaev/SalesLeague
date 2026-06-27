@@ -71,10 +71,6 @@ docker compose exec api node -e "const {PrismaClient}=require('@prisma/client');
 
 В терминале появится `Готово! Логин: admin@example.com` — значит администратор создан.
 
-Данные для входа:
-- **Email:** `admin@example.com`
-- **Пароль:** `admin123`
-
 ---
 
 ### Шаг 6 — Открой приложение
