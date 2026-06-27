@@ -9,9 +9,10 @@ import { PrizesModule } from './prizes/prizes.module'
 import { ShipsModule } from './ships/ships.module'
 import { ShotsModule } from './shots/shots.module'
 import { SalesModule } from './sales/sales.module'
+import { StatsModule } from './stats/stats.module'
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, SeasonsModule, PrizesModule, ShipsModule, ShotsModule, SalesModule],
+  imports: [PrismaModule, UsersModule, AuthModule, SeasonsModule, PrizesModule, ShipsModule, ShotsModule, SalesModule, StatsModule],
   providers: [
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
