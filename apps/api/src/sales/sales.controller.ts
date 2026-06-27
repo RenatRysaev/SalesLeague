@@ -2,11 +2,9 @@ import { Controller, Get, Post, Body, Param, Req, UseGuards } from '@nestjs/comm
 import { SalesService } from './sales.service'
 import { CreateSalesEntryDto } from './dto/create-sales-entry.dto'
 import { AddShotsDto } from './dto/add-shots.dto'
-import { JwtGuard } from '../auth/jwt/jwt.guard'
 import { Roles } from '../auth/roles.decorator'
 import { Role } from '@prisma/client'
 
-@UseGuards(JwtGuard)
 @Controller('seasons/:seasonId')
 export class SalesController {
   constructor(private salesService: SalesService) {}

@@ -278,7 +278,7 @@ export class AdminPage implements OnInit {
   }
 
   createUser() {
-    this.http.post('/api/auth/signup', this.userForm).subscribe({
+    this.http.post('/api/users', this.userForm).subscribe({
       next: () => {
         this.snack.open(`Пользователь ${this.userForm.name} создан`, 'OK', { duration: 3000 })
         this.userForm = { name: '', email: '', password: '', role: 'EMPLOYEE' }

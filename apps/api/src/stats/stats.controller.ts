@@ -1,8 +1,6 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common'
 import { StatsService } from './stats.service'
-import { JwtGuard } from '../auth/jwt/jwt.guard'
 
-@UseGuards(JwtGuard)
 @Controller('seasons/:seasonId')
 export class StatsController {
   constructor(private statsService: StatsService) {}

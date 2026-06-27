@@ -1,11 +1,9 @@
 import { Controller, Get, Post, Body, Param, Req, UseGuards } from '@nestjs/common'
 import { ShotsService } from './shots.service'
 import { FireShotDto } from './dto/fire-shot.dto'
-import { JwtGuard } from '../auth/jwt/jwt.guard'
 import { Roles } from '../auth/roles.decorator'
 import { Role } from '@prisma/client'
 
-@UseGuards(JwtGuard)
 @Controller('seasons/:seasonId/shots')
 export class ShotsController {
   constructor(private shotsService: ShotsService) {}

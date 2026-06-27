@@ -1,11 +1,9 @@
 import { Controller, Get, Post, Delete, Body, Param, UseGuards } from '@nestjs/common'
 import { ShipsService } from './ships.service'
 import { CreateShipDto } from './dto/create-ship.dto'
-import { JwtGuard } from '../auth/jwt/jwt.guard'
 import { Roles } from '../auth/roles.decorator'
 import { Role } from '@prisma/client'
 
-@UseGuards(JwtGuard)
 @Controller()
 export class ShipsController {
   constructor(private shipsService: ShipsService) {}

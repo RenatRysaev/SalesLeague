@@ -1,11 +1,9 @@
 import { Controller, Get, Post, Delete, Body, Param, UseGuards } from '@nestjs/common'
 import { PrizesService } from './prizes.service'
 import { CreatePrizeDto } from './dto/create-prize.dto'
-import { JwtGuard } from '../auth/jwt/jwt.guard'
 import { Roles } from '../auth/roles.decorator'
 import { Role } from '@prisma/client'
 
-@UseGuards(JwtGuard)
 @Controller('seasons/:seasonId/prizes')
 export class PrizesController {
   constructor(private prizesService: PrizesService) {}
