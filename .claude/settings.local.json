@@ -21,7 +21,16 @@
       "Bash(curl -s http://localhost:3000/auth/me)",
       "Bash(npx jest *)",
       "Bash(/Users/renatrysaev/.nvm/versions/node/v22.23.1/bin/node /Users/renatrysaev/Documents/pr/sale-motivation/apps/web/node_modules/@angular/cli/bin/ng.js build)",
-      "Bash(/Users/renatrysaev/.nvm/versions/node/v22.23.1/bin/node /Users/renatrysaev/.nvm/versions/node/v22.23.1/bin/npx @angular/cli build)"
+      "Bash(/Users/renatrysaev/.nvm/versions/node/v22.23.1/bin/node /Users/renatrysaev/.nvm/versions/node/v22.23.1/bin/npx @angular/cli build)",
+      "Bash(echo \"API PID: $!\")",
+      "Bash(sleep 4 && tail -20 /tmp/api.log)",
+      "Bash(lsof -ti:3000)",
+      "Bash(curl -s http://localhost:3000/seasons)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/seasons)",
+      "Bash(npm run start:dev > /tmp/api.log 2>&1 & *)",
+      "Bash(/Users/renatrysaev/.nvm/versions/node/v22.23.1/bin/node /Users/renatrysaev/Documents/pr/sale-motivation/apps/web/node_modules/@angular/cli/bin/ng.js serve --port 4200 --open)",
+      "Bash(echo \"Web PID: $!\")",
+      "Bash(node -e ' *)"
     ]
   }
 }

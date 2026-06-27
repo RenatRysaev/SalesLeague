@@ -16,7 +16,7 @@ import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar'
 import { AuthService } from '../../core/auth.service'
 
 interface Season { id: string; name: string; isActive: boolean; amountPerShot: number }
-interface User { id: string; name: string; email: string }
+interface User { id: string; name: string; email: string; role: string }
 
 @Component({
   selector: 'app-admin',
@@ -144,6 +144,62 @@ interface User { id: string; name: string; email: string }
           </div>
         </mat-tab>
 
+        <!-- ПОЛЬЗОВАТЕЛИ -->
+        <mat-tab label="Пользователи">
+          <div class="tab-content">
+            <mat-card>
+              <mat-card-header><mat-card-title>Добавить пользователя</mat-card-title></mat-card-header>
+              <mat-card-content>
+                <form class="row-form" (ngSubmit)="createUser()">
+                  <mat-form-field appearance="outline">
+                    <mat-label>Имя</mat-label>
+                    <input matInput [(ngModel)]="userForm.name" name="name" required />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Email</mat-label>
+                    <input matInput type="email" [(ngModel)]="userForm.email" name="email" required />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Пароль</mat-label>
+                    <input matInput type="password" [(ngModel)]="userForm.password" name="password" required />
+                  </mat-form-field>
+                  <mat-form-field appearance="outline">
+                    <mat-label>Роль</mat-label>
+                    <mat-select [(ngModel)]="userForm.role" name="role">
+                      <mat-option value="EMPLOYEE">Сотрудник</mat-option>
+                      <mat-option value="ADMIN">Администратор</mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <button mat-flat-button type="submit">Создать</button>
+                </form>
+              </mat-card-content>
+            </mat-card>
+
+            <table mat-table [dataSource]="users()" class="mat-elevation-z2 seasons-table">
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Имя</th>
+                <td mat-cell *matCellDef="let u">{{ u.name }}</td>
+              </ng-container>
+              <ng-container matColumnDef="email">
+                <th mat-header-cell *matHeaderCellDef>Email</th>
+                <td mat-cell *matCellDef="let u">{{ u.email }}</td>
+              </ng-container>
+              <ng-container matColumnDef="role">
+                <th mat-header-cell *matHeaderCellDef>Роль</th>
+                <td mat-cell *matCellDef="let u">
+                  @if (u.role === 'ADMIN') {
+                    <mat-chip color="accent" highlighted>Админ</mat-chip>
+                  } @else {
+                    <mat-chip>Сотрудник</mat-chip>
+                  }
+                </td>
+              </ng-container>
+              <tr mat-header-row *matHeaderRowDef="userCols"></tr>
+              <tr mat-row *matRowDef="let row; columns: userCols;"></tr>
+            </table>
+          </div>
+        </mat-tab>
+
       </mat-tab-group>
     </div>
   `,
@@ -167,12 +223,14 @@ export class AdminPage implements OnInit {
   private snack = inject(MatSnackBar)
 
   seasonCols = ['name', 'amount', 'status', 'actions']
+  userCols = ['name', 'email', 'role']
   seasons = signal<Season[]>([])
   users = signal<User[]>([])
 
   newSeason = { name: '', amountPerShot: 10000 }
   salesForm = { userId: '', amount: 0, note: '' }
   shotsForm = { userId: '', amount: 1 }
+  userForm = { name: '', email: '', password: '', role: 'EMPLOYEE' }
 
   private activeSeasonId = signal<string | null>(null)
 
@@ -215,6 +273,19 @@ export class AdminPage implements OnInit {
       next: (res) => {
         this.snack.open(`Начислено ${res.entry.shots} выстрелов`, 'OK', { duration: 3000 })
         this.salesForm = { userId: '', amount: 0, note: '' }
+      },
+    })
+  }
+
+  createUser() {
+    this.http.post('/api/auth/signup', this.userForm).subscribe({
+      next: () => {
+        this.snack.open(`Пользователь ${this.userForm.name} создан`, 'OK', { duration: 3000 })
+        this.userForm = { name: '', email: '', password: '', role: 'EMPLOYEE' }
+        this.loadUsers()
+      },
+      error: (err) => {
+        this.snack.open(err.error?.message ?? 'Ошибка при создании', 'OK', { duration: 4000 })
       },
     })
   }
