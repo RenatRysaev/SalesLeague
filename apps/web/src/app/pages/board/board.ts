@@ -51,7 +51,7 @@ type CellState = 'empty' | 'miss' | 'hit' | 'sunk'
       } @else {
       <div class="board-header">
         <h2>Привет, {{ auth.user()?.name }}</h2>
-        @if (balance() === 0) {
+        @if (!auth.isAdmin() && balance() === 0) {
           <p class="hint">У вас нет выстрелов. Попросите менеджера начислить их после продажи.</p>
         }
       </div>
@@ -114,15 +114,18 @@ type CellState = 'empty' | 'miss' | 'hit' | 'sunk'
     .cell {
       width: 42px; height: 42px; margin: 2px; border-radius: 8px;
       border: 1px solid rgba(255,255,255,0.08);
-      background: rgba(255,255,255,0.04); cursor: pointer;
-      transition: all 0.15s; position: relative; font-size: 16px;
+      background: rgba(255,255,255,0.04);
+      transition: background 0.12s, border-color 0.12s, box-shadow 0.12s, transform 0.12s;
+      position: relative; font-size: 16px;
+      cursor: default; pointer-events: auto;
     }
-    .cell:hover:not(:disabled) {
-      background: rgba(255,255,255,0.12);
-      border-color: var(--mat-sys-primary);
-      transform: scale(1.05);
+    .cell:not(.miss):not(.hit):not(.sunk):hover {
+      background: rgba(99,179,237,0.22);
+      border-color: #63b3ed;
+      box-shadow: 0 0 10px rgba(99,179,237,0.5);
+      transform: scale(1.1);
+      cursor: pointer;
     }
-    .cell:disabled { cursor: default; }
 
     .cell.miss { background: rgba(59,130,246,0.15); border-color: rgba(59,130,246,0.4); }
     .cell.miss::after { content: '·'; color: #60a5fa; font-size: 24px; line-height: 40px; position: absolute; top: 0; left: 0; right: 0; text-align: center; }
@@ -173,6 +176,7 @@ export class BoardPage implements OnInit {
   }
 
   canShoot(r: number, c: number): boolean {
+    if (this.auth.isAdmin()) return false
     const key = `${r}-${c}`
     return !!this.seasonId() && !this.shotMap().has(key) && this.balance() > 0 && !this.firing()
   }
@@ -214,7 +218,10 @@ export class BoardPage implements OnInit {
   }
 
   private loadHistory(seasonId: string) {
-    this.http.get<ShotResult[]>(`/api/seasons/${seasonId}/shots`).subscribe((shots) => {
+    const url = this.auth.isAdmin()
+      ? `/api/seasons/${seasonId}/shots/all`
+      : `/api/seasons/${seasonId}/shots`
+    this.http.get<ShotResult[]>(url).subscribe((shots) => {
       const map = new Map<string, ShotResult>()
       for (const s of shots) map.set(`${s.row}-${s.col}`, s)
       this.shotMap.set(map)
