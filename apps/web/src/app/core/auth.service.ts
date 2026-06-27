@@ -1,7 +1,7 @@
 import { Injectable, signal, computed, inject } from '@angular/core'
 import { HttpClient } from '@angular/common/http'
 import { Router } from '@angular/router'
-import { tap } from 'rxjs/operators'
+import { switchMap, tap } from 'rxjs/operators'
 
 export interface User {
   id: string
@@ -33,7 +33,7 @@ export class AuthService {
       { email, password },
     ).pipe(
       tap((tokens) => this.saveTokens(tokens)),
-      tap(() => this.loadMe()),
+      switchMap(() => this.loadMe()),
     )
   }
 
