@@ -7,9 +7,10 @@ import { RolesGuard } from './auth/roles.guard'
 import { SeasonsModule } from './seasons/seasons.module'
 import { PrizesModule } from './prizes/prizes.module'
 import { ShipsModule } from './ships/ships.module'
+import { ShotsModule } from './shots/shots.module'
 
 @Module({
-  imports: [PrismaModule, UsersModule, AuthModule, SeasonsModule, PrizesModule, ShipsModule],
+  imports: [PrismaModule, UsersModule, AuthModule, SeasonsModule, PrizesModule, ShipsModule, ShotsModule],
   providers: [
     { provide: APP_GUARD, useClass: RolesGuard },
   ],
