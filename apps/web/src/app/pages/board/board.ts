@@ -90,8 +90,10 @@ type CellState = 'empty' | 'miss' | 'hit' | 'sunk'
     .hint { color: var(--mat-sys-on-surface-variant); font-size: 14px; margin-top: 8px; }
 
     .grid-row { display: flex; }
-    .corner, .label {
-      width: 32px; height: 32px; display: flex;
+    .corner { width: 46px; height: 46px; }
+
+    .label {
+      width: 46px; height: 46px; display: flex;
       align-items: center; justify-content: center;
       font-size: 12px; color: var(--mat-sys-on-surface-variant);
     }

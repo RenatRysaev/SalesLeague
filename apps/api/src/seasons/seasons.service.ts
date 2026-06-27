@@ -1,10 +1,14 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common'
 import { PrismaService } from '../prisma/prisma.service'
 import { CreateSeasonDto } from './dto/create-season.dto'
+import { ShipGeneratorService } from './ship-generator.service'
 
 @Injectable()
 export class SeasonsService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private shipGenerator: ShipGeneratorService,
+  ) {}
 
   findAll() {
     return this.prisma.season.findMany({ orderBy: { createdAt: 'desc' } })
@@ -27,10 +31,14 @@ export class SeasonsService {
     if (!season) throw new NotFoundException('Season not found')
     if (season.isActive) throw new BadRequestException('Season is already active')
 
-    return this.prisma.$transaction(async (tx) => {
+    await this.prisma.$transaction(async (tx) => {
       await tx.season.updateMany({ where: { isActive: true }, data: { isActive: false } })
-      return tx.season.update({ where: { id }, data: { isActive: true } })
+      await tx.season.update({ where: { id }, data: { isActive: true } })
     })
+
+    await this.shipGenerator.placeShipsForSeason(id)
+
+    return this.prisma.season.findUnique({ where: { id } })
   }
 
   async remove(id: string) {

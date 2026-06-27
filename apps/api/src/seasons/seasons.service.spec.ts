@@ -2,6 +2,11 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { NotFoundException, BadRequestException } from '@nestjs/common'
 import { SeasonsService } from './seasons.service'
 import { PrismaService } from '../prisma/prisma.service'
+import { ShipGeneratorService } from './ship-generator.service'
+
+const mockShipGenerator = {
+  placeShipsForSeason: jest.fn().mockResolvedValue(undefined),
+}
 
 const mockSeason = {
   id: 'season-1',
@@ -34,6 +39,7 @@ describe('SeasonsService', () => {
       providers: [
         SeasonsService,
         { provide: PrismaService, useValue: mockPrisma },
+        { provide: ShipGeneratorService, useValue: mockShipGenerator },
       ],
     }).compile()
 
@@ -78,10 +84,13 @@ describe('SeasonsService', () => {
 
   describe('activate', () => {
     it('деактивирует все сезоны и активирует нужный', async () => {
-      mockPrisma.season.findUnique.mockResolvedValue(mockSeason)
+      const activated = { ...mockSeason, isActive: true }
+      mockPrisma.season.findUnique
+        .mockResolvedValueOnce(mockSeason)   // проверка существования
+        .mockResolvedValueOnce(activated)    // финальный return
       mockPrisma.$transaction.mockImplementation((fn: any) => fn(mockPrisma))
       mockPrisma.season.updateMany.mockResolvedValue({ count: 1 })
-      mockPrisma.season.update.mockResolvedValue({ ...mockSeason, isActive: true })
+      mockPrisma.season.update.mockResolvedValue(activated)
 
       const result = await service.activate('season-1')
 
@@ -93,7 +102,7 @@ describe('SeasonsService', () => {
         where: { id: 'season-1' },
         data: { isActive: true },
       })
-      expect(result.isActive).toBe(true)
+      expect(result!.isActive).toBe(true)
     })
 
     it('выбрасывает NotFoundException если сезон не найден', async () => {
