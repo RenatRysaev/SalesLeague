@@ -1,0 +1,116 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+}
+
+model User {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  role         Role     @default(EMPLOYEE)
+  createdAt    DateTime @default(now())
+
+  shots        Shot[]
+  balances     ShotBalance[]
+  salesEntries SalesEntry[]
+}
+
+model Season {
+  id             String   @id @default(cuid())
+  name           String
+  isActive       Boolean  @default(false)
+  amountPerShot  Int      // рублей за 1 выстрел
+  createdAt      DateTime @default(now())
+
+  ships        Ship[]
+  shots        Shot[]
+  balances     ShotBalance[]
+  salesEntries SalesEntry[]
+  prizes       Prize[]
+}
+
+model Prize {
+  id          String  @id @default(cuid())
+  name        String
+  description String?
+  seasonId    String
+
+  season Season @relation(fields: [seasonId], references: [id])
+  ship   Ship?
+}
+
+// размер корабля определяется количеством записей ShipCell
+model Ship {
+  id       String  @id @default(cuid())
+  seasonId String
+  prizeId  String  @unique
+  isSunk   Boolean @default(false)
+
+  season Season    @relation(fields: [seasonId], references: [id])
+  prize  Prize     @relation(fields: [prizeId], references: [id])
+  cells  ShipCell[]
+  shots  Shot[]
+}
+
+model ShipCell {
+  id     String @id @default(cuid())
+  shipId String
+  row    Int    // 0–9
+  col    Int    // 0–9
+
+  ship Ship @relation(fields: [shipId], references: [id])
+
+  @@unique([shipId, row, col])
+}
+
+model Shot {
+  id        String   @id @default(cuid())
+  userId    String
+  seasonId  String
+  shipId    String?  // null = промах
+  row       Int
+  col       Int
+  isHit     Boolean
+  createdAt DateTime @default(now())
+
+  user   User    @relation(fields: [userId], references: [id])
+  season Season  @relation(fields: [seasonId], references: [id])
+  ship   Ship?   @relation(fields: [shipId], references: [id])
+
+  @@unique([seasonId, row, col]) // одна клетка — один выстрел за сезон
+}
+
+model ShotBalance {
+  id        String @id @default(cuid())
+  userId    String
+  seasonId  String
+  available Int    @default(0)
+
+  user   User   @relation(fields: [userId], references: [id])
+  season Season @relation(fields: [seasonId], references: [id])
+
+  @@unique([userId, seasonId])
+}
+
+model SalesEntry {
+  id        String   @id @default(cuid())
+  userId    String
+  seasonId  String
+  amount    Int      // сумма продаж в рублях
+  shots     Int      // сколько выстрелов начислено за эту запись
+  note      String?  // комментарий админа
+  createdAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  season Season @relation(fields: [seasonId], references: [id])
+}
