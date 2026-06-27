@@ -18,7 +18,8 @@
       "Bash(npm run *)",
       "Bash(git rm *)",
       "Bash(xargs sed -i '' \"s|from '../../generated/prisma/client'|from '@prisma/client'|g; s|from '../../../generated/prisma/client'|from '@prisma/client'|g\")",
-      "Bash(curl -s http://localhost:3000/auth/me)"
+      "Bash(curl -s http://localhost:3000/auth/me)",
+      "Bash(npx jest *)"
     ]
   }
 }
