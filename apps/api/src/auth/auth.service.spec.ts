@@ -3,7 +3,7 @@ import { JwtService } from '@nestjs/jwt'
 import { UnauthorizedException } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { UsersService } from '../users/users.service'
-import { Role } from '../../generated/prisma/client'
+import { Role } from '@prisma/client'
 import * as bcrypt from 'bcryptjs'
 
 const mockUser = {

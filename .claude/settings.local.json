@@ -2,7 +2,23 @@
   "permissions": {
     "allow": [
       "Bash(npm --version)",
-      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --no-turbopack)"
+      "Bash(npx create-next-app@latest . --typescript --tailwind --eslint --app --no-src-dir --import-alias \"@/*\" --no-turbopack)",
+      "Bash(npm install *)",
+      "Bash(npx prisma *)",
+      "Bash(npx tsc *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(node -e \"const {PrismaClient} = require\\('./app/generated/prisma/client'\\); const p = new PrismaClient\\(\\); console.log\\('ok'\\)\")",
+      "Bash(openssl rand *)",
+      "Bash(mkdir -p /Users/renatrysaev/Documents/pr/sale-motivation/app/api/auth/\\\\[...nextauth\\\\])",
+      "Bash(git checkout *)",
+      "Bash(npx @nestjs/cli@latest new apps/api --package-manager npm --skip-git --language TypeScript)",
+      "Bash(npx @angular/cli@latest new apps/web --routing --style=scss --skip-git --package-manager=npm)",
+      "Bash(/Users/renatrysaev/.nvm/versions/node/v22.23.1/bin/npx @angular/cli@latest new apps/web --routing --style=scss --skip-git --package-manager=npm)",
+      "Bash(npm run *)",
+      "Bash(git rm *)",
+      "Bash(xargs sed -i '' \"s|from '../../generated/prisma/client'|from '@prisma/client'|g; s|from '../../../generated/prisma/client'|from '@prisma/client'|g\")",
+      "Bash(curl -s http://localhost:3000/auth/me)"
     ]
   }
 }

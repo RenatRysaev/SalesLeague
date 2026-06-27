@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing'
 import { ConflictException } from '@nestjs/common'
 import { UsersService } from './users.service'
 import { PrismaService } from '../prisma/prisma.service'
-import { Role } from '../../generated/prisma/client'
+import { Role } from '@prisma/client'
 
 const mockPrisma = {
   user: {
